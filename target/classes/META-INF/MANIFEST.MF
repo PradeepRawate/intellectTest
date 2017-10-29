@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: intellectDemo
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: admin
+Implementation-Vendor-Id: com.intellect.com
+Build-Jdk: 1.8.0_144
+Implementation-URL: http://projects.spring.io/spring-boot/intellectDem
+ o/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
