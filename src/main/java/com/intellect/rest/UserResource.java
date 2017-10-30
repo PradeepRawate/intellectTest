@@ -23,29 +23,25 @@ public class UserResource {
 	
 	@PutMapping("/user")
 	public String createUser(@RequestBody User user) {
-		userService.saveUser(user);
-		return null;
+		return userService.saveUser(user);
 		
 	}
 	
 	@PostMapping("/user")
-	public Integer updateUser(@RequestBody User user) {
-		userService.updateUser(user);
-		return null;
+	public String updateUser(@RequestBody User user) {
+		return userService.updateUser(user);
 		
 	}
 	
 	@GetMapping("/user/{userId}")
-	public Integer fetchUser(@PathVariable("userId") String userId) {
-		userService.getUser(userId);
-		return null;
+	public User fetchUser(@PathVariable("userId") String userId) {
+		return userService.getUser(userId);
 		
 	}
 	
 	@DeleteMapping("/user/{id}")
-	public Integer deleteUser(@PathVariable String userId) {
-		userService.deleteUser(userId);
-		return null;
+	public String deleteUser(@PathVariable String userId) {
+		return userService.deleteUser(userId);
 	}
 
 }
