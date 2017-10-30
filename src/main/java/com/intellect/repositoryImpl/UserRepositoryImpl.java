@@ -1,5 +1,6 @@
 package com.intellect.repositoryImpl;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,38 +12,43 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+
 import com.intellect.entity.User;
 import com.intellect.repository.UserRepository;
 
 @SuppressWarnings("unchecked")
+@Service
 public class UserRepositoryImpl implements UserRepository {
 
 	@SuppressWarnings("resource")
 	@Override
 	public User saveUser(User user) {
-		OutputStream ops = null;
         ObjectOutputStream objOps = null;
         
         InputStream fileIs = null;
         ObjectInputStream objIs = null;
+        Resource resource = new ClassPathResource("Users.txt");
         
         try {
-        	fileIs = new FileInputStream("Users.txt");
+        	fileIs = new FileInputStream(resource.getFile());
+        	if(fileIs.available() > 0) {
             objIs = new ObjectInputStream(fileIs);
-			List<User> users = (List<User>) objIs.readObject();
-			if(users != null || users.size() > 0) {
-				for (User userToUpdate : users) {
-					if(userToUpdate.getId() == user.getId()) {
-						userToUpdate.setPinCode(user.getPinCode());
-						userToUpdate.setBirthDate(user.getBirthDate());
-					}
-				}
-				objOps = writeToFile(users);
-			} else {
-				List<User> newUsers = Arrays.asList(user);
-				objOps = writeToFile(newUsers);
-			}
-            objOps.flush();
+            	List<User> users = (List<User>) objIs.readObject();
+        		for (User userToUpdate : users) {
+        			if(userToUpdate.getId().equals(user.getId())) {
+        				userToUpdate.setPinCode(user.getPinCode());
+        				userToUpdate.setBirthDate(user.getBirthDate());
+        			}
+        		}
+        		objOps = writeToFile(users, resource.getFile());
+            	objOps.flush();
+            } else {
+        		List<User> newUsers = Arrays.asList(user);
+        		objOps = writeToFile(newUsers, resource.getFile());
+        	}
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -60,10 +66,10 @@ public class UserRepositoryImpl implements UserRepository {
 		return user;
 	}
 
-	private ObjectOutputStream writeToFile(List<User> users) throws FileNotFoundException, IOException {
+	private ObjectOutputStream writeToFile(List<User> users, File file) throws FileNotFoundException, IOException {
 		OutputStream ops;
 		ObjectOutputStream objOps;
-		ops = new FileOutputStream("Users.txt");
+		ops = new FileOutputStream(file,true);
 		objOps = new ObjectOutputStream(ops);
 		objOps.writeObject(users);
 		return objOps;
@@ -75,8 +81,9 @@ public class UserRepositoryImpl implements UserRepository {
         InputStream fileIs = null;
         ObjectInputStream objIs = null;
         List<User> users = null;
+        Resource resource = new ClassPathResource("Users.txt");
 		try {
-            fileIs = new FileInputStream("Users.txt");
+            fileIs = new FileInputStream(resource.getFile());
             objIs = new ObjectInputStream(fileIs);
 			users  = (List<User>) objIs.readObject();
         } catch (FileNotFoundException e) {
@@ -100,10 +107,11 @@ public class UserRepositoryImpl implements UserRepository {
 	public void saveUsers(List<User> users) {
 		OutputStream ops = null;
         ObjectOutputStream objOps = null;
+        Resource resource = new ClassPathResource("Users.txt");
         try {
         	ops = new FileOutputStream("Users.txt");
         	objOps = new ObjectOutputStream(ops);
-			objOps = writeToFile(users);
+			objOps = writeToFile(users, resource.getFile());
             objOps.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

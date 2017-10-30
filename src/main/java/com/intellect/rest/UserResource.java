@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.intellect.entity.User;
@@ -14,6 +15,7 @@ import com.intellect.service.UserService;
 
 
 @RestController
+@RequestMapping("/api")
 public class UserResource {
 	
 	@Autowired
@@ -33,8 +35,8 @@ public class UserResource {
 		
 	}
 	
-	@GetMapping("/user/{id}")
-	public Integer fetchUser(@PathVariable String userId) {
+	@GetMapping("/user/{userId}")
+	public Integer fetchUser(@PathVariable("userId") String userId) {
 		userService.getUser(userId);
 		return null;
 		

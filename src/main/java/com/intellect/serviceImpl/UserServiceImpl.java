@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.intellect.entity.User;
 import com.intellect.repository.UserRepository;
 import com.intellect.service.UserService;
 
+
+@Service
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService {
 	public User getUser(String userId) {
 		List<User> users = userRepository.getUsers();
 		for (User userToFetch : users) {
-			if(userId == userToFetch.getId())
+			if(userId.equals(userToFetch.getId()))
 				return userToFetch;
 		}
 		return null;
